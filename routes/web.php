@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/prueba', 'home');
-Route::view('/prueba2', 'product-modal');
+Route::view('/', 'home');
+
+Route::view('/prueba2', 'products');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

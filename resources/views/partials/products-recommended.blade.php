@@ -65,4 +65,43 @@
       </div>
     </div>
   </div>
-</div>
+</div><!-- WhatsApp flotante con animación -->
+<a href="https://wa.me/1234567890" target="_blank" aria-label="Contactar por WhatsApp">
+    <img src="{{ asset('img/whatsapp.png') }}" alt="WhatsApp" class="whatsapp-float animate-bounce">
+</a>
+
+<!-- CSS -->
+<style>
+/* Animación personalizada de rebote */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); } /* Salta 10px hacia arriba */
+}
+
+.whatsapp-float {
+    position: fixed;      
+    bottom: 20px;         
+    right: 20px;          
+    width: 60px;          
+    height: 60px;
+    z-index: 1000;        
+    cursor: pointer;      
+    animation: bounce 2.5s infinite; /* Llama a la animación */
+    transition: transform 0.3s;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.2); /* Pequeño zoom al pasar el mouse */
+    animation: none;       /* Detiene el salto al hacer hover */
+}
+
+/* Responsivo: móviles más pequeños */
+@media (max-width: 640px) {
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+</style>
