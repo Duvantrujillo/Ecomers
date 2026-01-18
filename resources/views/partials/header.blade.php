@@ -1,6 +1,5 @@
 <header id="header" class="bg-white fixed w-full top-0 z-50 shadow-sm transition-transform duration-300">
-    <nav class="flex w-full items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
-
+    <nav class="flex w-full items-center justify-between py-4 px-4 sm:px-6 lg:py-6 lg:px-10">
 
         <div class="flex items-center flex-1">
             <!-- Botón hamburguesa móvil -->
@@ -8,7 +7,7 @@
                 class="lg:hidden p-2 mr-3 flex items-center justify-center z-20">
                 <span class="sr-only">Open main menu</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                    class="h-6 w-6 text-gray-900">
+                    class="h-6 w-6 lg:w-8 lg:h-8 text-gray-900">
                     <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round"
                         stroke-linejoin="round" />
                 </svg>
@@ -17,15 +16,14 @@
             <!-- Logo -->
             <a href="#" class="flex-shrink-0">
                 <span class="sr-only">Your Company</span>
-                <img src="{{ asset('img/Logo_web.png') }}" alt="Logo" class="h-8 sm:h-10 lg:h-12 w-auto" />
+                <img src="{{ asset('img/Logo_web.png') }}" alt="Logo" class="h-8 sm:h-10 lg:h-16 w-auto" />
             </a>
         </div>
-
 
         <el-popover-group class="hidden lg:flex lg:gap-x-8 sm:gap-x-6">
             <div class="relative">
                 <button popovertarget="desktop-menu-product"
-                    class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                    class="flex items-center gap-x-1 text-sm lg:text-lg font-semibold text-gray-900">
                     Womem
                     <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
                         class="size-5 flex-none text-gray-400">
@@ -38,12 +36,13 @@
                 <el-popover id="desktop-menu-product" anchor="bottom" popover
                     class="w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg outline-1 outline-gray-900/5 transition transition-discrete [--anchor-gap:--spacing(3)] backdrop:bg-transparent open:block data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in">
                     <div class="p-4">
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm lg:text-lg hover:bg-gray-50">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                     data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-600 group-hover:text-indigo-600">
+                                    class="size-6 lg:w-8 lg:h-8 text-gray-600 group-hover:text-indigo-600">
                                     <path d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                     <path d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" stroke-linecap="round"
@@ -58,12 +57,14 @@
                                 <p class="mt-1 text-gray-600">Get a better understanding of your traffic</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm lg:text-lg hover:bg-gray-50">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                     data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-600 group-hover:text-indigo-600">
+                                    class="size-6 lg:w-8 lg:h-8 text-gray-600 group-hover:text-indigo-600">
                                     <path
                                         d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59"
                                         stroke-linecap="round" stroke-linejoin="round" />
@@ -77,12 +78,14 @@
                                 <p class="mt-1 text-gray-600">Speak directly to your customers</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm lg:text-lg hover:bg-gray-50">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                     data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-600 group-hover:text-indigo-600">
+                                    class="size-6 lg:w-8 lg:h-8 text-gray-600 group-hover:text-indigo-600">
                                     <path
                                         d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
                                         stroke-linecap="round" stroke-linejoin="round" />
@@ -96,12 +99,14 @@
                                 <p class="mt-1 text-gray-600">Your customers’ data will be safe and secure</p>
                             </div>
                         </div>
-                        <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+
+                        <div
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm lg:text-lg hover:bg-gray-50">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                     data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-600 group-hover:text-indigo-600">
+                                    class="size-6 lg:w-8 lg:h-8 text-gray-600 group-hover:text-indigo-600">
                                     <path
                                         d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
                                         stroke-linecap="round" stroke-linejoin="round" />
@@ -116,12 +121,12 @@
                             </div>
                         </div>
                         <div
-                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                            class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm lg:text-lg hover:bg-gray-50">
                             <div
                                 class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                     data-slot="icon" aria-hidden="true"
-                                    class="size-6 text-gray-600 group-hover:text-indigo-600">
+                                    class="size-6 lg:w-8 lg:h-8 text-gray-600 group-hover:text-indigo-600">
                                     <path
                                         d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
                                         stroke-linecap="round" stroke-linejoin="round" />
@@ -136,11 +141,12 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
                         <a href="#"
-                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
+                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm lg:text-lg font-semibold text-gray-900 hover:bg-gray-100">
                             <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                class="size-5 flex-none text-gray-400">
+                                class="size-5 lg:w-6 lg:h-6 flex-none text-gray-400">
                                 <path
                                     d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm6.39-2.908a.75.75 0 0 1 .766.027l3.5 2.25a.75.75 0 0 1 0 1.262l-3.5 2.25A.75.75 0 0 1 8 12.25v-4.5a.75.75 0 0 1 .39-.658Z"
                                     clip-rule="evenodd" fill-rule="evenodd" />
@@ -148,9 +154,9 @@
                             Watch demo
                         </a>
                         <a href="#"
-                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
+                            class="flex items-center justify-center gap-x-2.5 p-3 text-sm lg:text-lg font-semibold text-gray-900 hover:bg-gray-100">
                             <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true"
-                                class="size-5 flex-none text-gray-400">
+                                class="size-5 lg:w-6 lg:h-6 flex-none text-gray-400">
                                 <path
                                     d="M2 3.5A1.5 1.5 0 0 1 3.5 2h1.148a1.5 1.5 0 0 1 1.465 1.175l.716 3.223a1.5 1.5 0 0 1-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 0 0 6.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 0 1 1.767-1.052l3.223.716A1.5 1.5 0 0 1 18 15.352V16.5a1.5 1.5 0 0 1-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 0 1 2.43 8.326 13.019 13.019 0 0 1 2 5V3.5Z"
                                     clip-rule="evenodd" fill-rule="evenodd" />
@@ -159,138 +165,97 @@
                         </a>
                     </div>
                 </el-popover>
+
             </div>
 
-            <a href="#" class="text-sm/6 font-semibold text-gray-900">man</a>
-            <a href="#" class="text-sm/6 font-semibold text-gray-900">Marketplace</a>
-            <a href="#" class="text-sm/6 font-semibold text-gray-900">Company</a>
         </el-popover-group>
-        <!-- resources/views/livewire/welcome/navigation.blade.php -->
-        <div class="flex-1 flex justify-end items-center space-x-4">
+
+        <div class="flex-1 flex justify-end items-center space-x-4 relative">
+            <!-- íconos y dropdown de usuario (sin cambios) -->
+            <!-- Carrito / Bolsa -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
+                stroke="currentColor" class="w-6 h-6 lg:w-8 lg:h-8">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
 
+            <!-- Corazón / Favoritos -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
+                stroke="currentColor" class="w-6 h-6 lg:w-8 lg:h-8">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
 
-            <button command="show-modal" commandfor="dialog" class="p-1 rounded-md hover:bg-white/10">
+            <!-- Usuario / Registro -->
+            <button id="userDropdownButton" data-dropdown-toggle="userDropdown" data-dropdown-trigger="click"
+                type="button" class="p-1 rounded-md hover:bg-white/10">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
+                    stroke="currentColor" class="w-6 h-6 lg:w-8 lg:h-8">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
             </button>
 
 
+            <div id="userDropdown"
+                class="z-50 hidden absolute right-4 top-full mt-2 bg-white border border-default-medium rounded-base shadow-lg
+            w-44 lg:w-56">
+                <ul class="p-2 lg:p-4 text-sm lg:text-base text-body font-medium">
+                    @if (Route::has('login'))
+                        @auth
+                            <li>
+                                <a href="{{ url('/dashboard') }}"
+                                    class="block px-3 py-2 lg:px-5 lg:py-3 hover:bg-neutral-tertiary-medium rounded">
+                                    Dashboard
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ route('login') }}"
+                                    class="block px-3 py-2 lg:px-5 lg:py-3 hover:bg-neutral-tertiary-medium rounded">
+                                    Log in
+                                </a>
+                            </li>
+                            @if (Route::has('register'))
+                                <li>
+                                    <a href="{{ route('register') }}"
+                                        class="block px-3 py-2 lg:px-5 lg:py-3 hover:bg-neutral-tertiary-medium rounded">
+                                        Register
+                                    </a>
+                                </li>
+                            @endif
+                        @endauth
+                    @endif
+                </ul>
+            </div>
 
-            <!--
-            @if (Route::has('login'))
-                @auth
-                                                            {{-- Usuario autenticado --}}
-                                                            <a href="{{ url('/dashboard') }}" class="text-black font-semibold text-sm">
-                                                                Dashboard
-                                                            </a>
-@else
-    {{-- Login --}}
-                                                            <a href="{{ route('login') }}" class="text-black font-semibold text-sm">
-                                                                Log in
-                                                            </a>
-
-                                                            {{-- Register --}}
-                                                            @if (Route::has('register'))
-    <a href="{{ route('register') }}" class="text-black font-semibold text-sm">
-                                                                    Register
-                                                                </a>
-    @endif
-                @endauth
-            @endif
-
--->
-        </div>
 
     </nav>
 
+    <!-- Menú móvil (sin cambios) -->
     <el-dialog>
         <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
             <div tabindex="0" class="fixed inset-0 focus:outline-none">
                 <el-dialog-panel
                     class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="-m-1.5 p-1.5">
-                            <span class="sr-only">Your Company</span>
-                            <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                                alt="" class="h-8 w-auto" />
-                        </a>
-                        <button type="button" command="close" commandfor="mobile-menu"
-                            class="-m-2.5 rounded-md p-2.5 text-gray-700">
-                            <span class="sr-only">Close menu</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                data-slot="icon" aria-hidden="true" class="size-6">
-                                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="mt-6 flow-root">
-                        <div class="-my-6 divide-y divide-gray-500/10">
-                            <div class="space-y-2 py-6">
-                                <div class="-mx-3">
-                                    <button type="button" command="--toggle" commandfor="products"
-                                        class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
-                                        Product
-                                        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon"
-                                            aria-hidden="true" class="size-5 flex-none in-aria-expanded:rotate-180">
-                                            <path
-                                                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                                                clip-rule="evenodd" fill-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    <el-disclosure id="products" hidden class="mt-2 block space-y-2">
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Analytics</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Engagement</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Security</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Integrations</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Automations</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Watch
-                                            demo</a>
-                                        <a href="#"
-                                            class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Contact
-                                            sales</a>
-                                    </el-disclosure>
-                                </div>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Features</a>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Marketplace</a>
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Company</a>
-                            </div>
-                            <div class="py-6">
-                                <a href="#"
-                                    class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Log
-                                    in</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- contenido del menú móvil -->
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-900 font-semibold">Women</a></li>
+                        <li><a href="#" class="text-gray-900 font-semibold">Men</a></li>
+                        <li><a href="#" class="text-gray-900 font-semibold">Marketplace</a></li>
+                        <li><a href="#" class="text-gray-900 font-semibold">Company</a></li>
+                    </ul>
+
                 </el-dialog-panel>
             </div>
         </dialog>
     </el-dialog>
 </header>
+
 <div class="pt-[64px] sm:pt-[72px] lg:pt-[88px]">
     <!-- contenido debajo -->
 </div>
+
 <script>
     let lastScroll = 0;
     const header = document.getElementById('header');
@@ -299,10 +264,8 @@
         const currentScroll = window.pageYOffset;
 
         if (currentScroll > lastScroll && currentScroll > 100) {
-            // Scroll hacia abajo → ocultar header
             header.style.transform = 'translateY(-100%)';
         } else {
-            // Scroll hacia arriba → mostrar header
             header.style.transform = 'translateY(0)';
         }
 

@@ -26,20 +26,40 @@ class LoginForm extends Form
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+  public function authenticate(): void
+{
+    $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
+    $user = \App\Models\User::where('email', $this->email)->first();
 
-            throw ValidationException::withMessages([
-                'form.email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+    if (!$user) {
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages([
+            'form.email' => trans('auth.failed'),
+        ]);
     }
+
+    // Verificar contraseña
+    if (!\Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages([
+            'form.email' => trans('auth.failed'),
+        ]);
+    }
+
+    // Verificar rol de administrador
+    if (!$user->hasRole('admin')) {
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages([
+            'form.email' => 'No tienes permisos para acceder al panel.',
+        ]);
+    }
+
+    // Login exitoso
+    \Illuminate\Support\Facades\Auth::guard(config('filament.auth.guard'))->login($user);
+
+    RateLimiter::clear($this->throttleKey());
+}
 
     /**
      * Ensure the authentication request is not rate limited.
