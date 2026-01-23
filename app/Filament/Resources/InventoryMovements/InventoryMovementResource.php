@@ -15,10 +15,14 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventoryMovementResource extends Resource
 {
     protected static ?string $model = InventoryMovement::class;
+    protected static string|\UnitEnum|null $navigationGroup = 'Inventario';
+    protected static ?string $navigationLabel = 'Movimientos de inventario';
+    protected static ?int $navigationSort = 5;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -37,6 +41,14 @@ class InventoryMovementResource extends Resource
     public static function table(Table $table): Table
     {
         return InventoryMovementsTable::configure($table);
+    }
+
+    // ⚡ Aquí la clave: query base optimizada
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with('product')      // Preload relación product (evita N+1 queries)
+            ->orderBy('id', 'desc'); // Últimos registros primero
     }
 
     public static function getRelations(): array

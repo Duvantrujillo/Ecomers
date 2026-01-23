@@ -20,8 +20,11 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\UnitEnum|null $navigationGroup = 'Inventario';
+    protected static ?string $navigationLabel = 'Categorías';
+    protected static ?int $navigationSort = 1;
 
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -41,9 +44,7 @@ class CategoryResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

@@ -22,4 +22,29 @@ class Inventory extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    
+    protected static function booted()
+{
+    static::updated(function ($inventory) {
+        if ($inventory->isDirty('quantity')) {
+
+            $original = $inventory->getOriginal('quantity');
+            $actual = $inventory->quantity;
+            $diferencia = $actual - $original;
+
+            if ($diferencia === 0) {
+                return;
+            }
+
+            InventoryMovement::create([
+                'product_id' => $inventory->product_id,
+                'movement_type' => $diferencia > 0 ? 'entrada' : 'salida',
+                'quantity' => abs($diferencia),
+                'comment' => 'Ajuste manual de inventario',
+                'movement_date' => now(),
+            ]);
+        }
+    });
+}
+
 }

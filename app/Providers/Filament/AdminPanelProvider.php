@@ -18,6 +18,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Support\Facades\Vite;
+use Filament\Support\Assets\Js;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,6 +33,12 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+                // ✅ AQUÍ CARGAMOS EL JS DEL QR PARA TODO EL PANEL
+            ->assets([
+    Js::make('qr-scanner', Vite::asset('resources/js/filament/qr-scanner.js'))
+        ->module(),
+])
+
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

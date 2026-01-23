@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Inventories\Tables;
+namespace App\Filament\Resources\SaleItems\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -9,24 +9,39 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class InventoriesTable
+class SaleItemsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('product.name')
-                    ->searchable(),
-                TextColumn::make('quantity')
-    ->numeric()
-    ->sortable()
-    ->color(fn($state, $record) => $state <= $record->minimum_alert ? 'danger' : 'success'),
+                // Muestra el nombre del cliente de la venta
+                TextColumn::make('sale.customer_name')
+                    ->label('Sale')
+                    ->sortable(),
 
-                TextColumn::make('location')
-                    ->searchable(),
-                TextColumn::make('minimum_alert')
+                // Muestra el nombre del producto
+                TextColumn::make('product.name')
+                    ->label('Product')
+                    ->sortable(),
+
+                TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
+
+                TextColumn::make('unit_price')
+                    ->money('usd') // O tu moneda
+                    ->sortable(),
+
+                TextColumn::make('subtotal')
+                    ->money('usd')
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

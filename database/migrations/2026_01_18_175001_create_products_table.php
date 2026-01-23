@@ -18,6 +18,8 @@ return new class extends Migration
         $table->decimal('price', 10, 2); // precio, 10 dígitos totales, 2 decimales
         $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete(); // FK a categories
         $table->boolean('active')->default(true); // mostrar/ocultar producto
+        $table->string('qr_reference')
+                  ->unique();
         $table->timestamps(); // created_at y updated_at automáticos
     });
 }
