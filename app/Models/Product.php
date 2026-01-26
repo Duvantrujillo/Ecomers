@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class Product extends Model
 {
@@ -16,13 +21,11 @@ class Product extends Model
         'active',
     ];
 
-    // Relación con categoría
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-       // Evento para generar un QR único
     protected static function booted()
     {
         static::creating(function ($product) {
@@ -30,5 +33,20 @@ class Product extends Model
                 $product->qr_reference = 'QR-' . Str::uuid()->toString();
             }
         });
+    }
+
+    public function qrDataUri(): string
+    {
+        return Cache::remember(
+            "product:qr:{$this->id}",
+            now()->addDays(30),
+            function () {
+                $qr = new QrCode($this->qr_reference);
+
+                $writer = new PngWriter();
+
+                return $writer->write($qr)->getDataUri();
+            }
+        );
     }
 }

@@ -4,18 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
-class EnsureAdminRole
+class EnsureUserIsNotAdmin
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        // Si no está autenticado o no tiene rol 'admin'
-        if (!$user || !$user->hasRole('admin')) {
-            Auth::logout(); // opcional, fuerza logout
-            abort(403, 'No tienes permisos para acceder al panel.');
+        if ($user && $user->hasRole('admin')) {
+            abort(403, 'Los administradores no pueden acceder a esta sección.');
         }
 
         return $next($request);

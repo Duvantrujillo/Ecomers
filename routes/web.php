@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsNotAdmin;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\ProductQrPdfController;
+
 Route::view('/', 'home');
 Route::view('/prueba2', 'products');
-
 
 Route::get('/logout', function () {
     Auth::logout(); // Cierra la sesión del usuario
@@ -23,5 +24,17 @@ Route::middleware(['auth', 'verified', EnsureUserIsNotAdmin::class])->group(func
     })->name('profile');
 });
 
+
+// ✅ Rutas para PDF QRs (solo usuarios autenticados)
+// No toca tus rutas existentes, solo agrega estas.
+Route::middleware(['auth'])->group(function () {
+     // ✅ PDF MASIVO (ruta sin choque con Filament Resource)
+    Route::get('/admin/product-qrs.pdf', [ProductQrPdfController::class, 'all'])
+        ->name('admin.products.qr.all.pdf');
+
+    // ✅ PDF por producto (el que ya te funcionó)
+    Route::get('/admin/products/{product}/qr.pdf', [ProductQrPdfController::class, 'single'])
+        ->name('admin.products.qr.pdf');
+});
 
 require __DIR__.'/auth.php';

@@ -12,7 +12,6 @@ class EnsureAdminRole
     {
         $user = $request->user();
 
-        // Si no está logueado o no tiene rol admin, aborta con 403
         if (!$user || !$user->hasRole('admin')) {
             abort(403, 'No tienes permisos para acceder al panel.');
         }
