@@ -8,11 +8,31 @@ use App\Models\Product;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Livewire\Attributes\On;
-
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 class CreateAdminSale extends CreateRecord
 {
     protected static string $resource = AdminSaleResource::class;
+ protected function mutateFormDataBeforeCreate(array $data): array
+{
+    $items = collect($data['saleItems'] ?? [])
+        ->filter(fn ($i) => filled($i['product_id'] ?? null))
+        ->values()
+        ->all();
 
+    if (count($items) < 1) {
+        throw ValidationException::withMessages([
+            'saleItems' => 'Debes agregar al menos 1 producto.',
+        ]);
+    }
+
+    $data['saleItems'] = $items;
+
+    $data['total_amount'] = collect($items)
+        ->sum(fn ($i) => (float) ($i['subtotal'] ?? 0));
+
+    return $data;
+}
     #[On('qr-scanned')]
     public function addProductByQr(string $code): void
     {

@@ -32,22 +32,20 @@ class AdminSale extends Model
     }
 
     // Relación con los productos de la venta (sale_items)
-    public function items()
-    {
-        return $this->hasMany(SaleItem::class, 'admin_sale_id');
-    }
+    
 
         // Relación con los items de la venta
-    public function saleItems()
-    {
-        return $this->hasMany(SaleItem::class, 'admin_sale_id', 'id');
-    }
+   public function saleItems()
+{
+    return $this->hasMany(\App\Models\AdminSaleItem::class, 'admin_sale_id');
+}
+/*
  protected static function booted()
     {
         static::creating(function ($sale) {
             // Sumar los subtotales de los productos antes de guardar
             $sale->total_amount = $sale->saleItems->sum(fn($i) => $i->subtotal);
         });
-    }
+    }*/
 
 }

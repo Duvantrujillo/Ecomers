@@ -15,7 +15,7 @@ class AdminSalesTable
     {
         return $table
             ->columns([
-                TextColumn::make('admin_id')
+                TextColumn::make('admin.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('sale_date')
