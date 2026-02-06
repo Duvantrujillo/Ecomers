@@ -19,7 +19,8 @@ class EditAdminSale extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            //este es el boton de eliminar
+           // DeleteAction::make(),
         ];
     }
 

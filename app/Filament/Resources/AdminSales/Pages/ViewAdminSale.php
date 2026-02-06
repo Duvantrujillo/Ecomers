@@ -10,10 +10,12 @@ class ViewAdminSale extends ViewRecord
 {
     protected static string $resource = AdminSaleResource::class;
 
-    protected function getHeaderActions(): array
+    //Este es el boton de editar
+
+   /* protected function getHeaderActions(): array
     {
         return [
             EditAction::make(),
         ];
-    }
+    }*/
 }

@@ -20,8 +20,11 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function getUrlAttribute($value)
-{
-    return asset('storage/' . $value);
-}
+   // ✅ accesor “seguro” para usar en vistas
+    public function getImageUrlAttribute(): string
+    {
+        // si en DB guardas: products/archivo.png
+        return asset('storage/' . ltrim($this->attributes['url'] ?? '', '/'));
+        // (si prefieres: return Storage::url($this->attributes['url']);
+    }
 }

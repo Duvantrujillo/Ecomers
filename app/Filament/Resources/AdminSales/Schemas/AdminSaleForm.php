@@ -25,40 +25,40 @@ class AdminSaleForm
     /**
      * Opciones filtradas: solo productos activos con stock total > 0.
      */
-  protected static ?array $productOptionsCache = null;
-protected static array $productMeta = []; // [id => ['price' => x, 'stock' => y]]
+    protected static ?array $productOptionsCache = null;
+    protected static array $productMeta = []; // [id => ['price' => x, 'stock' => y]]
 
-protected static function productOptions(): array
-{
-    if (self::$productOptionsCache !== null) {
-        return self::$productOptionsCache;
+    protected static function productOptions(): array
+    {
+        if (self::$productOptionsCache !== null) {
+            return self::$productOptionsCache;
+        }
+
+        $rows = DB::table('products')
+            ->join('inventories', 'inventories.product_id', '=', 'products.id')
+            ->where('products.active', 1)
+            ->groupBy('products.id', 'products.name', 'products.price')
+            ->havingRaw('SUM(inventories.quantity) > 0')
+            ->orderBy('products.name')
+            ->selectRaw('products.id, products.name, products.price, SUM(inventories.quantity) as stock_total')
+            ->get();
+
+        $out = [];
+
+        foreach ($rows as $r) {
+            $id = (int) $r->id;
+
+            // guardamos meta para NO volver a consultar al seleccionar
+            self::$productMeta[$id] = [
+                'price' => (float) $r->price,
+                'stock' => (int) $r->stock_total,
+            ];
+
+            $out[$id] = "{$r->name} — Stock: {$r->stock_total} — $" . number_format((float) $r->price, 2);
+        }
+
+        return self::$productOptionsCache = $out;
     }
-
-    $rows = DB::table('products')
-        ->join('inventories', 'inventories.product_id', '=', 'products.id')
-        ->where('products.active', 1)
-        ->groupBy('products.id', 'products.name', 'products.price')
-        ->havingRaw('SUM(inventories.quantity) > 0')
-        ->orderBy('products.name')
-        ->selectRaw('products.id, products.name, products.price, SUM(inventories.quantity) as stock_total')
-        ->get();
-
-    $out = [];
-
-    foreach ($rows as $r) {
-        $id = (int) $r->id;
-
-        // guardamos meta para NO volver a consultar al seleccionar
-        self::$productMeta[$id] = [
-            'price' => (float) $r->price,
-            'stock' => (int) $r->stock_total,
-        ];
-
-        $out[$id] = "{$r->name} — Stock: {$r->stock_total} — $" . number_format((float) $r->price, 2);
-    }
-
-    return self::$productOptionsCache = $out;
-}
 
 
     public static function configure(Schema $schema): Schema
@@ -72,7 +72,7 @@ protected static function productOptions(): array
                 ->columns(['default' => 1, 'md' => 12])
                 ->schema([
                     Hidden::make('admin_id')
-                        ->default(fn () => auth()->id())
+                        ->default(fn() => auth()->id())
                         ->dehydrated(true)
                         ->required(),
 
@@ -82,21 +82,27 @@ protected static function productOptions(): array
                         ->required()
                         ->columnSpan(['md' => 4]),
 
-                    Select::make('status')
-                        ->label('Estado')
-                        ->options([
-                            'pending' => 'Pendiente',
-                            'paid' => 'Pagada',
-                            'shipped' => 'Enviada',
-                            'cancelled' => 'Cancelada',
-                        ])
-                        ->default('pending')
-                        ->required()
-                        ->columnSpan(['md' => 4]),
+                   
+Select::make('status')
+    ->label('Estado (Pedido)')
+    ->options([
+        'pending' => 'Pendiente',
+        'processing' => 'En preparación',
+        'shipped' => 'Enviada',
+        'delivered' => 'Entregada',
+        'returned' => 'Devuelta',
+        'cancelled' => 'Cancelada',
+    ])
+    ->default('pending')
+    ->required()
+    ->columnSpan(['md' => 4])
+    ->disabledOn('create'),  // ✅ en crear queda bloqueado, en editar se puede cambiar
+
+
 
                     TextInput::make('customer_name')
                         ->label('Cliente')
-                        ->default(fn () => auth()->user()?->name)
+                        ->default(fn() => auth()->user()?->name)
                         ->readOnly()
                         ->columnSpan(['md' => 4]),
 
@@ -186,31 +192,31 @@ HTML)),
                     ]),
 
                     // ===== Items (último arriba) =====
-               Repeater::make('saleItems')
-                ->relationship('saleItems')
-    ->dehydrated(true) 
-    ->minItems(1)
-    ->required()
-    ->defaultItems(0)
-    ->addable(false)
-    ->deletable()
-    ->deleteAction(fn ($action) => $action->action(function (array $arguments, callable $get, callable $set): void {
-        $items = $get('saleItems') ?? [];
+                    Repeater::make('saleItems')
+                        ->relationship('saleItems')
+                        ->dehydrated(true)
+                        ->minItems(1)
+                        ->required()
+                        ->defaultItems(0)
+                        ->addable(false)
+                        ->deletable()
+                        ->deleteAction(fn($action) => $action->action(function (array $arguments, callable $get, callable $set): void {
+                            $items = $get('saleItems') ?? [];
 
-        $index = $arguments['item'] ?? null;
-        if ($index === null || ! array_key_exists($index, $items)) {
-            return;
-        }
+                            $index = $arguments['item'] ?? null;
+                            if ($index === null || ! array_key_exists($index, $items)) {
+                                return;
+                            }
 
-        unset($items[$index]);
+                            unset($items[$index]);
 
-        // Reindexar + setear state REAL (esto hace que el contador y total bajen)
-        $set('saleItems', array_values($items));
-    }))
-    ->reorderable()
-    ->collapsible()
-    ->collapsed(false)
-    ->live()
+                            // Reindexar + setear state REAL (esto hace que el contador y total bajen)
+                            $set('saleItems', array_values($items));
+                        }))
+                        ->reorderable()
+                        ->collapsible()
+                        ->collapsed(false)
+                        ->live()
 
                         ->schema([
 
@@ -223,50 +229,50 @@ HTML)),
                                 Select::make('product_id')
                                     ->label('Producto')
                                     ->required()
-                                    ->options(fn () => self::productOptions())
+                                    ->options(fn() => self::productOptions())
                                     ->searchable()
                                     ->columnSpan(['md' => 6])
                                     ->reactive()
-                              ->afterStateUpdated(function ($state, callable $set, callable $get) {
-    if (! $state) {
-        $set('stock_cached', null);
-        $set('unit_price', null);
-        $set('quantity', 1);
-        $set('subtotal', 0);
-        return;
-    }
+                                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                        if (! $state) {
+                                            $set('stock_cached', null);
+                                            $set('unit_price', null);
+                                            $set('quantity', 1);
+                                            $set('subtotal', 0);
+                                            return;
+                                        }
 
-    // Asegura que el cache/meta esté cargado
-    self::productOptions();
+                                        // Asegura que el cache/meta esté cargado
+                                        self::productOptions();
 
-    $id = (int) $state;
+                                        $id = (int) $state;
 
-    $meta = self::$productMeta[$id] ?? null;
+                                        $meta = self::$productMeta[$id] ?? null;
 
-    // si no está en meta, es porque no cumple (activo + stock>0)
-    if (! $meta || $meta['stock'] <= 0) {
-        $set('product_id', null);
-        return;
-    }
+                                        // si no está en meta, es porque no cumple (activo + stock>0)
+                                        if (! $meta || $meta['stock'] <= 0) {
+                                            $set('product_id', null);
+                                            return;
+                                        }
 
-    $stock = (int) $meta['stock'];
-    $unit  = (float) $meta['price'];
+                                        $stock = (int) $meta['stock'];
+                                        $unit  = (float) $meta['price'];
 
-    $set('stock_cached', $stock);
-    $set('unit_price', $unit);
+                                        $set('stock_cached', $stock);
+                                        $set('unit_price', $unit);
 
-    $qty = (int) ($get('quantity') ?? 1);
-    $qty = max(1, min($qty, $stock));
+                                        $qty = (int) ($get('quantity') ?? 1);
+                                        $qty = max(1, min($qty, $stock));
 
-    $set('quantity', $qty);
-    $set('subtotal', round($qty * $unit, 2));
-}),
+                                        $set('quantity', $qty);
+                                        $set('subtotal', round($qty * $unit, 2));
+                                    }),
 
 
                                 Placeholder::make('stock_info')
                                     ->label('Stock disp.')
                                     ->columnSpan(['md' => 2])
-                                    ->content(fn (callable $get) => ($get('stock_cached') === null) ? '—' : (string) $get('stock_cached'))
+                                    ->content(fn(callable $get) => ($get('stock_cached') === null) ? '—' : (string) $get('stock_cached'))
                                     ->live(),
 
                                 TextInput::make('quantity')
@@ -276,7 +282,7 @@ HTML)),
                                     ->required()
                                     ->columnSpan(['md' => 1])
                                     ->reactive()
-                                    ->maxValue(fn (callable $get) => $get('stock_cached') ?? null)
+                                    ->maxValue(fn(callable $get) => $get('stock_cached') ?? null)
                                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                         $qty = (int) $state;
                                         $unit = (float) ($get('unit_price') ?? 0);
@@ -305,31 +311,31 @@ HTML)),
                         ]),
 
                     Grid::make(['default' => 1, 'md' => 12])->schema([
-                       Placeholder::make('items_count')
-    ->label('Cantidad de productos')
-    ->columnSpan(['md' => 4])
-    ->content(function (callable $get) {
-        $items = $get('saleItems') ?? [];
+                        Placeholder::make('items_count')
+                            ->label('Cantidad de productos')
+                            ->columnSpan(['md' => 4])
+                            ->content(function (callable $get) {
+                                $items = $get('saleItems') ?? [];
 
-        return collect($items)
-            ->filter(fn ($item) => is_array($item) && filled($item['product_id'] ?? null))
-            ->count();
-    })
-    ->live(),
+                                return collect($items)
+                                    ->filter(fn($item) => is_array($item) && filled($item['product_id'] ?? null))
+                                    ->count();
+                            })
+                            ->live(),
 
 
                         Placeholder::make('total_preview')
                             ->label('Total a pagar')
                             ->columnSpan(['md' => 8])
                             ->content(function (callable $get) {
-    $items = $get('saleItems') ?? [];
+                                $items = $get('saleItems') ?? [];
 
-    $total = collect($items)
-        ->filter(fn ($item) => is_array($item) && filled($item['product_id'] ?? null))
-        ->sum(fn ($item) => (float) ($item['subtotal'] ?? 0));
+                                $total = collect($items)
+                                    ->filter(fn($item) => is_array($item) && filled($item['product_id'] ?? null))
+                                    ->sum(fn($item) => (float) ($item['subtotal'] ?? 0));
 
-    return '$' . number_format($total, 2);
-})
+                                return '$' . number_format($total, 2);
+                            })
 
                             ->live(),
                     ]),

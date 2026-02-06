@@ -34,4 +34,24 @@ class AdminSaleItem extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+     protected static function booted(): void
+    {
+        // ✅ Siempre mantener subtotal correcto
+        static::saving(function (self $item) {
+            $qty  = (int) ($item->quantity ?? 0);
+            $unit = (float) ($item->unit_price ?? 0);
+
+            $item->subtotal = round($qty * $unit, 2);
+        });
+
+        // ✅ Cuando se guarda (create/update), refrescar total de la venta
+        static::saved(function (self $item) {
+            $item->adminSale?->refreshTotal();
+        });
+
+        // ✅ Cuando se elimina, refrescar total de la venta
+        static::deleted(function (self $item) {
+            $item->adminSale?->refreshTotal();
+        });
+    }
 }

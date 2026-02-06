@@ -39,12 +39,12 @@ class AdminSaleResource extends Resource
         return AdminSalesTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+   public static function getRelations(): array
+{
+    return [
+        RelationManagers\PaymentsRelationManager::class,
+    ];
+}
 
     public static function getPages(): array
     {
