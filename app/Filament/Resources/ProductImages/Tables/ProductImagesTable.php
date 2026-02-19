@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 
 class ProductImagesTable
 {
@@ -19,10 +20,11 @@ class ProductImagesTable
                 TextColumn::make('product.name')
                     ->searchable(),
 
-                ImageColumn::make('url')       // <- cambiamos TextColumn por ImageColumn
-                    ->disk('public')          // apunta al disco donde se guardan las imágenes
-                    ->height(60)              // altura de la miniatura en la tabla
-                    ->label('Image'),
+               
+ImageColumn::make('url')
+    ->getStateUsing(fn ($record) => Storage::disk('public')->url($record->url))
+    ->height(60)
+    ->label('Image'),
 
                 TextColumn::make('alt_text')
                     ->searchable(),

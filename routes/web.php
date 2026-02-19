@@ -5,8 +5,11 @@ use App\Http\Middleware\EnsureUserIsNotAdmin;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ProductQrPdfController;
+use App\Http\Controllers\Store\HomeController;
 
-Route::view('/', 'home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+//Route::view('/', 'home');
 Route::view('/prueba2', 'products');
 
 Route::get('/logout', function () {

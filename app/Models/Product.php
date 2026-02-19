@@ -53,4 +53,10 @@ class Product extends Model
 {
     return $this->hasMany(\App\Models\ProductImage::class, 'product_id');
 }
+
+
+public function mainImage()
+{
+    return $this->hasOne(ProductImage::class)->orderBy('order');
+}
 }

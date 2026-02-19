@@ -46,45 +46,69 @@ class AdminSalePaymentForm
                 ->numeric()
                 ->minValue(0.01)
                 ->required()
-                ->rule(function ($livewire, Get $get) {
-                    return function (string $attribute, $value, \Closure $fail) use ($livewire, $get) {
-                        // En RelationManager existe getOwnerRecord(); en Resource "global" no.
-                        $sale = method_exists($livewire, 'getOwnerRecord') ? $livewire->getOwnerRecord() : null;
-                        if (! $sale) {
-                            return;
-                        }
+               ->rule(function ($livewire, Get $get) {
+    return function (string $attribute, $value, \Closure $fail) use ($livewire, $get) {
 
-                        $amount = (float) $value;
+        // 1) Obtener la venta (RelationManager o Resource suelto)
+        $sale = method_exists($livewire, 'getOwnerRecord')
+            ? $livewire->getOwnerRecord()
+            : null;
 
-                        $status = $get('status');
-                        $type   = $get('type');
+        if (! $sale) {
+            $saleId = $get('admin_sale_id');
+            if ($saleId) {
+                $sale = \App\Models\AdminSale::query()->find($saleId);
+            }
+        }
 
-                        // Solo bloqueamos cuando cuenta como dinero real
-                        if ($status !== 'approved') {
-                            return;
-                        }
+        if (! $sale) return;
 
-                        $total = (float) $sale->total_amount;
+        $amount = (float) $value;
 
-                        $paid = (float) $sale->payments()
-                            ->where('status', 'approved')
-                            ->get()
-                            ->sum(fn ($p) => $p->type === 'refund' ? -$p->amount : $p->amount);
+        $status = $get('status') ?? 'approved';
+        $type   = $get('type') ?? 'payment';
 
-                        if ($type === 'payment') {
-                            $balance = $total - $paid;
-                            if ($amount > $balance + 0.0001) {
-                                $fail('Te estás pasando. Saldo pendiente: $' . number_format($balance, 2));
-                            }
-                        }
+        // Solo bloqueamos cuando cuenta como dinero real
+        if ($status !== 'approved') return;
 
-                        if ($type === 'refund') {
-                            if ($amount > $paid + 0.0001) {
-                                $fail('No puedes reembolsar más de lo pagado. Pagado neto: $' . number_format($paid, 2));
-                            }
-                        }
-                    };
-                }),
+        // 2) Usar total bloqueado si existe (mejor práctica)
+        //    Si no tienes locked_total_amount, esto igual funciona usando total_amount
+        $total = (float) ($sale->locked_total_amount ?? $sale->total_amount);
+
+        // 3) Excluir el pago actual (si estás editando) para no contarlo 2 veces
+        $currentPaymentId = null;
+
+        if (method_exists($livewire, 'getRecord')) {
+            $currentPaymentId = optional($livewire->getRecord())->id;
+        } elseif (property_exists($livewire, 'record')) {
+            $currentPaymentId = optional($livewire->record)->id;
+        }
+
+        $paidQuery = $sale->payments()->where('status', 'approved');
+
+        if ($currentPaymentId) {
+            $paidQuery->where('id', '!=', $currentPaymentId);
+        }
+
+        $paid = (float) $paidQuery->get()
+            ->sum(fn ($p) => $p->type === 'refund' ? -$p->amount : $p->amount);
+
+        // 4) Validaciones
+        if ($type === 'payment') {
+            $balance = $total - $paid;
+
+            if ($amount > $balance + 0.0001) {
+                $fail('Te estás pasando. Saldo pendiente: $' . number_format($balance, 2));
+            }
+        }
+
+        if ($type === 'refund') {
+            if ($amount > $paid + 0.0001) {
+                $fail('No puedes reembolsar más de lo pagado. Pagado neto: $' . number_format($paid, 2));
+            }
+        }
+    };
+}),
 
           TextInput::make('currency')
     ->label('Moneda')
