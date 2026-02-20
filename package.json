@@ -18,6 +18,7 @@
     },
     "dependencies": {
         "@tailwindplus/elements": "^1.0.22",
+        "alpinejs": "^3.15.8",
         "flowbite": "^4.0.1",
         "html5-qrcode": "^2.3.8"
     }

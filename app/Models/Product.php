@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -58,5 +58,9 @@ class Product extends Model
 public function mainImage()
 {
     return $this->hasOne(ProductImage::class)->orderBy('order');
+}
+public function variants(): HasMany
+{
+    return $this->hasMany(\App\Models\ProductVariant::class);
 }
 }

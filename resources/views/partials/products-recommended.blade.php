@@ -73,39 +73,56 @@
 
 
 <div class="bg-white">
-  <div class="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-    <h2 class="text-2xl font-bold tracking-tight text-gray-900">Productos</h2>
+    <div class="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Productos</h2>
 
-    <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-6">
-      @foreach($products as $product)
-       <div class="group relative overflow-hidden rounded-md">
-  <img
-    src="{{ $product->image_url }}"
-    alt="{{ $product->image_alt }}"
-    class="aspect-square w-full bg-gray-200 object-cover transition-transform duration-300 ease-out lg:group-hover:scale-105"
-    loading="lazy"
-    decoding="async"
-  />
+        <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-6">
+            @foreach ($products as $product)
+                <div class="group relative overflow-hidden rounded-md">
 
-  <div class="mt-3 flex items-start justify-between gap-3">
-    <div class="min-w-0">
-      <h3 class="text-sm font-medium text-gray-900 truncate">
-        {{ $product->name }}
-      </h3>
-      <p class="mt-1 text-xs text-gray-500 truncate">
-        {{ $product->category->name ?? 'Sin categoría' }}
-      </p>
+                    <div class="absolute right-2 top-2 z-10" x-data="{ burst: false }">
+                        <button type="button"
+                            class="relative inline-flex items-center justify-center rounded-full bg-white/90 p-2 shadow hover:bg-white focus:outline-none"
+                            @click.stop="
+      const turnedOn = $store.likes.toggle('{{ $product->id }}');
+      if (turnedOn) { burst=true; setTimeout(()=>burst=false, 350); }
+    "
+                            :aria-label="$store.likes.isLiked('{{ $product->id }}') ? 'Quitar me encanta' : 'Me encanta'">
+                            <span x-show="burst"
+                                class="absolute inset-0 rounded-full bg-red-400/50 animate-ping"></span>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="h-6 w-6 transition duration-150"
+                                :class="$store.likes.isLiked('{{ $product->id }}') ? 'text-red-500 fill-red-500 scale-110' :
+                                    'text-gray-800 fill-none'">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 8.25c0-2.485-2.099-4.5-4.687-4.5-1.935 0-3.597 1.126-4.313 2.733C11.284 4.876 9.622 3.75 7.687 3.75 5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <img src="{{ $product->image_url }}" alt="{{ $product->image_alt }}"
+                        class="aspect-square w-full bg-gray-200 object-cover transition-transform duration-300 ease-out lg:group-hover:scale-105"
+                        loading="lazy" decoding="async" />
+
+                    <div class="mt-3 flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <h3 class="text-sm font-medium text-gray-900 truncate">
+                                {{ $product->name }}
+                            </h3>
+                            <p class="mt-1 text-xs text-gray-500 truncate">
+                                {{ $product->category->name ?? 'Sin categoría' }}
+                            </p>
+                        </div>
+
+                        <p class="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                            ${{ number_format($product->price, 0) }}
+                        </p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
-
-    <p class="text-sm font-semibold text-gray-900 whitespace-nowrap">
-      ${{ number_format($product->price, 0) }}
-    </p>
-  </div>
-</div>
-
-      @endforeach
-    </div>
-  </div>
 </div>
 
 </div><!-- WhatsApp flotante con animación -->
