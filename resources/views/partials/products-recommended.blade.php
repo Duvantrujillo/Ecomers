@@ -78,7 +78,7 @@
 
         <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-6">
             @foreach ($products as $product)
-                <div class="group relative overflow-hidden rounded-md">
+                <div class="group relative overflow-hidden rounded-md" x-data>
 
                     <div class="absolute right-2 top-2 z-10" x-data="{ burst: false }">
                         <button type="button"
@@ -119,6 +119,47 @@
                             ${{ number_format($product->price, 0) }}
                         </p>
                     </div>
+                    <!-- BOTÓN A TODO LO ANCHO -->
+                    <div class="mt-4">
+
+                        <!-- Si no está en carrito -->
+                        <template x-if="!$store.cart.has({{ $product->id }})">
+                            <button class="w-full bg-black text-white py-3 rounded-md"
+                                @click="
+    $store.cart.add({
+      id: {{ $product->id }},
+      name: @js($product->name),
+      price: {{ $product->price }},
+      image: @js($product->image_url)
+    });
+
+    window.animations.flyToCart(
+      $event.currentTarget,
+      document.querySelector('[data-cart-target]')
+    );
+  ">
+                                Agregar al carrito
+                            </button>
+                        </template>
+
+                        <!-- Si ya está en carrito -->
+                        <template x-if="$store.cart.has({{ $product->id }})">
+                            <div class="flex items-center justify-between border rounded-md p-2">
+                                <button @click="$store.cart.decrement({{ $product->id }})">−</button>
+
+                                <span x-text="$store.cart.qty({{ $product->id }})"></span>
+
+                                <button
+                                    @click="$store.cart.add({
+                    id: {{ $product->id }},
+                    name: @js($product->name),
+                    price: {{ $product->price }},
+                    image: @js($product->image_url)
+                })">+</button>
+                            </div>
+                        </template>
+
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -126,7 +167,9 @@
 </div>
 
 </div><!-- WhatsApp flotante con animación -->
-<a href="https://wa.me/1234567890" target="_blank" aria-label="Contactar por WhatsApp">
+<!-- WhatsApp flotante -->
+<a href="https://wa.me/1234567890" target="_blank" aria-label="Contactar por WhatsApp" x-data
+    x-show="!$store.ui.cartOpen" x-transition.opacity>
     <img src="{{ asset('img/whatsapp.png') }}" alt="WhatsApp" class="whatsapp-float animate-bounce">
 </a>
 

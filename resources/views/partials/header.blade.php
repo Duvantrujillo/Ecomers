@@ -1,4 +1,5 @@
-<header id="header" class="bg-white fixed w-full top-0 z-50 shadow-sm transition-transform duration-300">
+<header id="header" x-data x-cloak x-show="!($store.ui.cartOpen && $store.ui.isMobile)" x-transition
+    class="bg-white fixed w-full top-0 z-50 shadow-sm transition-transform duration-300">
     <nav class="flex w-full items-center justify-between py-4 px-4 sm:px-6 lg:py-6 lg:px-10">
 
         <div class="flex items-center flex-1">
@@ -173,15 +174,42 @@
         <div class="flex-1 flex justify-end items-center space-x-4 relative">
             <!-- íconos y dropdown de usuario (sin cambios) -->
             <!-- Carrito / Bolsa -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 lg:w-8 lg:h-8">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
+           <div class="relative" x-data="{ bounce: false, timer: null }"
+  @cart:orb-hit.window="
+    bounce = true;
+    clearTimeout(timer);
+    timer = setTimeout(() => bounce = false, 120);
+  "
+>
+  <button
+    type="button"
+    data-cart-target
+    class="relative transition-transform duration-200 will-change-transform"
+    @click="$store.ui.toggleCart()"
+    aria-label="Abrir carrito"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6 lg:w-8 lg:h-8 transition-transform duration-200"
+      :class="bounce ? 'scale-125' : ''"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+    </svg>
+  </button>
+
+  <span
+    x-show="$store.cart.count > 0"
+    x-text="$store.cart.count"
+    class="absolute -top-2 -right-2 bg-green-600 text-white text-xs min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center"
+  ></span>
+</div>
 
             <!-- Corazón / Favoritos -->
-            <div x-data="{ pulse: false }" x-init="$watch('$store.likes.count', () => { pulse = true;
-                setTimeout(() => pulse = false, 250); })" class="relative">
+            <div x-data="{ pulse: false }" x-init="$watch('$store.likes.count', () => {
+                pulse = true;
+                setTimeout(() => pulse = false, 250);
+            })" class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 lg:w-8 lg:h-8 transition-transform"
                     :class="pulse ? 'scale-125' : 'scale-100'">
@@ -259,23 +287,38 @@
     </el-dialog>
 </header>
 
-<div class="pt-[64px] sm:pt-[72px] lg:pt-[88px]">
-    <!-- contenido debajo -->
-</div>
-
+<div x-data :class="$store.ui.cartOpen ? '' : 'pt-[64px] sm:pt-[72px] lg:pt-[88px]'">
 <script>
-    let lastScroll = 0;
-    const header = document.getElementById('header');
+  let lastScroll = 0;
+  const header = document.getElementById('header');
 
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
+  function showHeader() {
+    header.style.transform = 'translateY(0)';
 
-        if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = 'translateY(-100%)';
-        } else {
-            header.style.transform = 'translateY(0)';
-        }
+    // ✅ CLAVE: sincroniza lastScroll para que no lo esconda en el siguiente evento scroll
+    lastScroll = window.pageYOffset;
+  }
 
-        lastScroll = currentScroll;
-    });
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+
+    // ✅ si el carrito está abierto, no escondas el header
+    if (window.Alpine?.store('ui')?.cartOpen) {
+      showHeader();
+      return;
+    }
+
+    if (currentScroll > lastScroll && currentScroll > 100) {
+      header.style.transform = 'translateY(-100%)';
+    } else {
+      header.style.transform = 'translateY(0)';
+    }
+
+    lastScroll = currentScroll;
+  });
+
+  // ✅ cuando agregas al carrito, forzamos mostrar navbar
+  window.addEventListener('cart:added', () => {
+    showHeader();
+  });
 </script>
